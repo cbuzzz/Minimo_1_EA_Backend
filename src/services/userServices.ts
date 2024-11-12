@@ -1,5 +1,4 @@
 import { usersInterface, usersofDB } from '../modelos/types_d_users'
-//import userData from './users.json'
 
 export const getEntries = {
     getAll: async(num1:number,num2:number): Promise<usersInterface[]>=>{
@@ -11,6 +10,20 @@ export const getEntries = {
     },
     findById: async(id:string): Promise<usersInterface | null>=>{
         return await usersofDB.findById(id);
+    },
+    findIdByName: async (name: string): Promise<string | null> => {
+        return await usersofDB.findOne({ name: name }).exec()
+            .then(userResponse => {
+                if (userResponse == null) {
+                    return null;
+                } else {
+                    return userResponse._id.toString();
+                }
+            })
+            .catch(error => {
+                console.error('Error al buscar el usuario por nombre:', error);
+                return null;
+            });
     },
     findIdAndPassword: async(name:string,password:string): Promise<usersInterface | null>=>{
         // Si falla quitar el name:name por name, pero no deberia.
